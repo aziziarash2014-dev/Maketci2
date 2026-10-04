@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAKETÇİ - Qeydiyyat</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #f4fff7, #fff7ed);
+            color: #222;
+        }
+
+        header {
+            width: 100%;
+            background: #006225;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 65px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 9px 12px;
+            border-radius: 8px;
+            transition: 0.25s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: #ff9900;
+        }
+
+        .nav-links .login-btn {
+            background: #ff7a00;
+            color: white;
+        }
+
+        .nav-links .login-btn:hover {
+            background: #ff9500;
+            color: white;
+        }
+
+        .register-section {
+            min-height: calc(100vh - 95px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 450px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 22px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.10);
+            border-top: 5px solid #ff7a00;
+        }
+
+        .register-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #ecfdf3;
+            color: #16a34a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        .register-box h1 {
+            text-align: center;
+            margin: 5px 0 8px;
+            font-size: 30px;
+            color: #222;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #16a34a;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 14px 14px 43px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            transition: 0.25s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #ff7a00;
+            box-shadow: 0 0 0 3px rgba(255,122,0,0.10);
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 18px 0;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .terms input {
+            margin-top: 3px;
+            accent-color: #16a34a;
+        }
+
+        .terms a {
+            color: #ff7a00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #ff7a00, #ff9500);
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 7px 18px rgba(255,122,0,0.25);
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .register-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            display: none;
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .message.success {
+            display: block;
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .message.error {
+            display: block;
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .login-text {
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .login-text a {
+            color: #16a34a;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        @media (max-width: 800px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+                padding: 7px 8px;
+            }
+
+            .register-box {
+                padding: 30px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            <img src="Untitled.png" alt="MAKETÇİ">
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i> Ana Səhifə
+            </a>
+
+            <a href="Shop.html">
+                <i class="fa-solid fa-store"></i> Mağaza
+            </a>
+
+            <a href="card.html">
+                <i class="fa-solid fa-cart-shopping"></i> Səbət
+            </a>
+
+            <a href="login.html" class="login-btn">
+                <i class="fa-solid fa-right-to-bracket"></i> Login
+            </a>
+        </div>
+
+    </nav>
+</header>
+
+
+<main class="register-section">
+
+    <div class="register-box">
+
+        <div class="register-icon">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+
+        <h1>Hesab yarat</h1>
+
+        <p class="subtitle">
+            MAKETÇİ ailəsinə qoşul və alış-verişə başla! 🚀
+        </p>
+
+        <form id="registerForm">
+
+            <div class="input-group">
+                <label for="name">Ad Soyad</label>
+
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Adınızı və soyadınızı daxil edin"
+                        required
+                    >
+                </div>
+            </div>
+
+
+            <div class="input-group">
+                <label for="email">E-poçt</label>
+
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="example@mail.com"
+                        required
+                    >
+                </div>
+            </div>
+
+
+            <div class="input-group">
+                <label for="password">Şifrə</label>
+
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Şifrənizi daxil edin"
+                        minlength="6"
+                        required
+                    >
+                </div>
+            </div>
+
+
+            <div class="input-group">
+                <label for="confirm-password">Şifrəni təsdiqlə</label>
+
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        placeholder="Şifrənizi yenidən daxil edin"
+                        minlength="6"
+                        required
+                    >
+                </div>
+            </div>
+
+
+            <div class="terms">
+
+                <input type="checkbox" id="terms" required>
+
+                <label for="terms">
+                    Qaydalar və şərtlərlə razıyam.
+                    <a href="#">Ətraflı</a>
+                </label>
+
+            </div>
+
+
+            <button type="submit" class="register-btn" id="registerBtn">
+                <i class="fa-solid fa-user-plus"></i>
+                Hesab yarat
+            </button>
+
+            <div id="message" class="message"></div>
+
+        </form>
+
+
+        <p class="login-text">
+            Artıq hesabın var?
+            <a href="login.html">Login et →</a>
+        </p>
+
+    </div>
+
+</main>
+
+
+<script>
+    const SUPABASE_URL = "https://iktngczlingbdueobpor.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_w2ZvQMrsLCBDnysA0zyARQ_BbcoXXLR";
+
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    const registerForm = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+    const registerBtn = document.getElementById("registerBtn");
+
+    registerForm.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+
+        message.className = "message";
+        message.textContent = "";
+
+        if (password !== confirmPassword) {
+            message.className = "message error";
+            message.textContent = "Şifrələr eyni deyil!";
+            return;
+        }
+
+        if (password.length < 6) {
+            message.className = "message error";
+            message.textContent = "Şifrə ən azı 6 simvol olmalıdır!";
+            return;
+        }
+
+        registerBtn.disabled = true;
+        registerBtn.innerHTML = "Hesab yaradılır...";
+
+        const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: name
+                }
+            }
+        });
+
+        if (error) {
+
+            console.error(error);
+
+            message.className = "message error";
+            message.textContent = error.message;
+
+            registerBtn.disabled = false;
+            registerBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Hesab yarat';
+
+            return;
+        }
+
+        message.className = "message success";
+
+        if (data.session) {
+            message.textContent = "Hesab uğurla yaradıldı! Ana səhifəyə yönləndirilirsiniz...";
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1200);
+
+        } else {
+            message.textContent =
+                "Hesab yaradıldı! E-poçtunuza təsdiqləmə linki göndərilib. E-poçtunuzu təsdiqlədikdən sonra Login edin.";
+
+            registerBtn.disabled = false;
+            registerBtn.innerHTML = '<i class="fa-solid fa-check"></i> Hesab yaradıldı';
+        }
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAKETÇİ - Ana Səhifə</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .slider-container {
+            width: 100%; 
+            max-width: 1600px; 
+            margin: 0 auto 40px auto; 
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 4px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background-color: #006225;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            font-size: 14px;
+            width: 180px;
+            border-radius: 20px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .slide h2 { font-size: 36px; margin-bottom: 10px; }
+        .slide p { font-size: 18px; margin-bottom: 20px; }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: #ffffff;
+            border: none;
+            padding: 12px 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 18px;
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .slider-btn:hover { background: var(--orange, #ff6b00); }
+        .prev-btn { left: 15px; }
+        .next-btn { right: 15px; }
+
+        .badge-side {
+            position: absolute;
+            top: 15px;
+            right: 0;
+            background: linear-gradient(135deg, var(--orange, #ff6b00), #ff9900);
+            color: #006225;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: -2px 3px 8px rgba(0, 0, 0, 0.15);
+            z-index: 12;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .filter-container select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-weight: 600;
+            color: var(--dark-green, #1b4332);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .about-section {
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            margin-top: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            line-height: 1.7;
+        }
+
+        .about-section h2 {
+            font-size: 28px;
+            color: var(--dark-green, #1b4332);
+            margin-bottom: 15px;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .about-feature-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            border-left: 4px solid var(--orange, #ff6b00);
+        }
+
+        footer {
+            background-color: #067706;
+            color: #ffffff;
+            padding: 50px 0 20px 0;
+            margin-top: 60px;
+            border-top: 3px solid var(--orange, #ff6b00);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .footer-col h3 span { color: var(--orange, #ff6b00); }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--orange, #ff6b00);
+            padding-left: 5px;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .footer-socials a {
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-socials a:hover {
+            background: var(--orange, #ff6b00);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="brick-container"></div>
+    
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="Untitled.png" height="80" alt="Logo"></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Ana Səhifə</a></li>
+                <li><a href="Shop.html">Məhsullar</a></li>
+                <li><a href="#about-section">Haqqımızda</a></li>
+                <li><a href="card.html">Səbət</a></li>
+                <li>
+    <a href="register.html" id="account-link">
+        Hesab Yarat
+    </a>
+</li>
+            </ul>
+        </nav>
+        
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Məhsul axtar..." oninput="filterProducts()">
+        </div>
+
+        <div class="nav-buttons">
+            <a href="admin.html" class="btn-admin">Admin Panel</a>
+            <a href="card.html" class="btn-cart">Səbət (<span id="cart-count">0</span>)</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 3 Slaydlı Banner -->
+        <div class="slider-container">
+            <div class="slides" id="slider-slides">
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=1200');">
+                    <div class="slide-content">
+                        <h2>Xəyallarınızdakı Maketi Qurun</h2>
+                        <p>Ən keyfiyyətli mini kərpiclər və dəstlər</p>
+                        <a href="Shop.html" class="btn-hero">Kolleksiyaya Bax</a>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=1200');">
+                    <div class="slide-content">
+                        <h2>Yeni Gələn Model Dəstləri</h2>
+                        <p>Ən son əlavə olunan eksklüziv məhsullar</p>
+                        <a href="Shop.html" class="btn-hero">Yenilərə Bax</a>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1200');">
+                    <div class="slide-content">
+                        <h2>Həftənin Xüsusi Ən Çox Satanları</h2>
+                        <p>Müştərilərimizin en çox bəyəndiyi modellər</p>
+                        <a href="#products-section" class="btn-hero">Məşhurları Gör</a>
+                    </div>
+                </div>
+            </div>
+            <button class="slider-btn prev-btn" onclick="moveSlide(-1)">❮</button>
+            <button class="slider-btn next-btn" onclick="moveSlide(1)">❯</button>
+        </div>
+
+        <!-- Məhsul Siyahısı və Qiymət Filtrasiyası -->
+        <div class="filter-container" id="products-section">
+            <h2 class="section-title" style="margin-bottom: 0;">📦 Məhsullarımız</h2>
+            <div>
+                <label for="sort-select"><b>Sırala:</b> </label>
+                <select id="sort-select" onchange="filterProducts()">
+                    <option value="default">Varsayılan</option>
+                    <option value="cheap">Ən Ucuz</option>
+                    <option value="expensive">Ən Baha</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="product-grid" id="main-products-grid"></div>
+
+        <!-- Haqqımızda Bölməsi -->
+        <section class="about-section" id="about-section">
+            <h2>Haqqımızda</h2>
+            <p><strong>Maketçi — ideyaları maketə çeviririk. 🧱</strong></p>
+            <p>
+                Maketçi olaraq müxtəlif ölçü və dizaynda detallı mini maketlər hazırlayırıq. Müasir 3D çap texnologiyasından istifadə edərək evlərdən tutmuş müxtəlif dekorativ və xüsusi layihələrə qədər fərqli maketlər yaradırıq.
+            </p>
+            <p>
+                Məqsədimiz sadəcə məhsul satmaq deyil — yaradıcılığı, detalları və real görünüşü bir araya gətirən maketlər hazırlamaqdır.
+                İstər kolleksiyanıza yeni bir maket əlavə etmək, istərsə də öz ideyanızı gerçəkləşdirmək istəyin, Maketçi sizin üçün doğru yerdir.
+            </p>
+
+            <div class="about-features">
+                <div class="about-feature-item">🖨️ Müasir 3D çap</div>
+                <div class="about-feature-item">🎨 Detallı və kreativ dizaynlar</div>
+                <div class="about-feature-item">🧱 Fərqli maket seçimləri</div>
+                <div class="about-feature-item">❤️ Hər məhsula diqqətli yanaşma</div>
+            </div>
+            <p style="margin-top: 20px; font-weight: bold; text-align: center;">Maketçi — kiçik ölçüdə böyük ideyalar. 🚀</p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>MAKET<span>Çİ</span></h3>
+                <p>İdeyaları maketə çeviririk. Ən son 3D texnologiyalar ilə detallı və eksklüziv maketlər hazırlayırıq.</p>
+                <div class="footer-socials">
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://wa.me/994708059373" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Faydalı Keçidlər</h4>
+                <ul>
+                    <li><a href="index.html">Ana Səhifə</a></li>
+                    <li><a href="Shop.html">Məhsullar</a></li>
+                    <li><a href="#about-section">Haqqımızda</a></li>
+                    <li><a href="card.html">Səbətim</a></li>
+                    <li><a href="register.html">Hesab yarat</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Əlaqə Məlumatları</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Bakı şəhəri, Azərbaycan</li>
+                    <li><i class="fas fa-phone"></i> +994 (70)-805-50-12</li>
+                    <li><i class="fas fa-envelope"></i> info@maketci.az</li>
+                    <li><i class="fas fa-clock"></i> B.E - Ş. 09:00 - 19:00</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 MAKETÇİ. Bütün hüquqlar qorunur.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase Script Initialization -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPTvAIyGNwScwHWySnsAgNFOlTIddWzo0",
+            authDomain: "maketci-48508.firebaseapp.com",
+            projectId: "maketci-48508",
+            storageBucket: "maketci-48508.firebasestorage.app",
+            messagingSenderId: "433980085844",
+            appId: "1:433980085844:web:94dbd368c033fe2111ffc1",
+            measurementId: "G-KP14Q5E2J2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+    <!-- Supabase and Main Application Logic -->
+    <script>
+        const SUPABASE_URL = "https://iktngczlingbdueobpor.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_w2ZvQMrsLCBDnysA0zyARQ_BbcoXXLR";
+
+        const supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            const slides = document.getElementById('slider-slides');
+            if (!slides) return;
+            const totalSlides = slides.children.length;
+
+            if (index >= totalSlides) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = totalSlides - 1;
+            } else {
+                currentSlide = index;
+            }
+
+            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function moveSlide(step) {
+            showSlide(currentSlide + step);
+        }
+
+        setInterval(() => moveSlide(1), 5000);
+
+        let allProducts = [];
+
+        async function loadProducts() {
+            const container = document.getElementById('main-products-grid');
+            if (!container) return;
+
+            container.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Məhsullar yüklənir...</p>';
+
+            const { data, error } = await supabaseClient
+                .from('products')
+                .select('*')
+                .order('id', { ascending: true });
+
+            if (error) {
+                console.error("Supabase error:", error);
+                container.innerHTML = `
+                    <p style="grid-column:1/-1;text-align:center;color:red;">
+                        Məhsullar yüklənərkən xəta baş verdi.
+                    </p>
+                `;
+                return;
+            }
+
+            allProducts = data || [];
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const sortSelect = document.getElementById('sort-select');
+            const searchInput = document.getElementById('search-input');
+
+            const sortType = sortSelect ? sortSelect.value : 'default';
+            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            let filteredProducts = allProducts.filter(product => {
+                const name = product.name ? product.name.toLowerCase() : '';
+                return name.includes(searchQuery);
+            });
+
+            if (sortType === 'cheap') {
+                filteredProducts.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+            } else if (sortType === 'expensive') {
+                filteredProducts.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
+            }
+
+            renderProductGrid(filteredProducts);
+        }
+
+        function renderProductGrid(list) {
+            const container = document.getElementById('main-products-grid');
+            if (!container) return;
+
+            if (!list.length) {
+                container.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Hələ ki məhsul tapılmadı.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            list.forEach(product => {
+                const productName = product.name || 'Adsız məhsul';
+                const price = product.price || 0;
+                const image = product.image || 'https://via.placeholder.com/400x300?text=Maketci';
+                const description = product.description || 'Maketçi məhsulu';
+
+                container.innerHTML += `
+                    <div class="product-card" onclick="window.location.href='product.html?id=${product.id}'" style="cursor:pointer;">
+                        <span class="badge-side">TREND</span>
+                        <img src="${image}" alt="${productName}">
+                        <div class="product-info">
+                            <h3 class="product-title">${productName}</h3>
+                            <p class="product-desc">${description}</p>
+                            <div class="price-box">
+                                <span class="product-price">${price} AZN</span>
+                            </div>
+                            <button class="btn-add-cart" onclick="event.stopPropagation(); addToCart('${escapeQuotes(productName)}', ${price}, ${product.id})">
+                                Səbətə At
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function escapeQuotes(text) {
+            return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+
+        function addToCart(title, price, id) {
+            let cart = JSON.parse(localStorage.getItem('maketci_cart')) || [];
+            cart.push({ id: id, title: title, price: price });
+            localStorage.setItem('maketci_cart', JSON.stringify(cart));
+            updateCartCount();
+            alert(title + ' səbətə əlavə olundu!');
+        }
+
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('maketci_cart')) || [];
+            const counter = document.getElementById('cart-count');
+            if (counter) {
+                counter.innerText = cart.length;
+            }
+        }
+
+        function loadCustomSliderImages() {
+            const customSlides = JSON.parse(localStorage.getItem('maketci_slides')) || {};
+            const slideElements = document.querySelectorAll('.slide');
+
+            if (customSlides[1] && slideElements[0]) {
+                slideElements[0].style.backgroundImage = `url('${customSlides[1]}')`;
+            }
+            if (customSlides[2] && slideElements[1]) {
+                slideElements[1].style.backgroundImage = `url('${customSlides[2]}')`;
+            }
+            if (customSlides[3] && slideElements[2]) {
+                slideElements[2].style.backgroundImage = `url('${customSlides[3]}')`;
+            }
+        }
+
+        function createFallingBricks(count = 30) {
+            const container = document.getElementById('brick-container');
+            if (!container) return;
+
+            const colors = ['brick-orange', 'brick-green'];
+
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const brick = document.createElement('div');
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+                    brick.classList.add('falling-brick', randomColor);
+
+                    const leftPos = Math.random() * 100;
+                    const duration = 2.5 + Math.random() * 2.5;
+                    const sizeScale = 0.8 + Math.random() * 0.5;
+
+                    brick.style.left = leftPos + 'vw';
+                    brick.style.animationDuration = duration + 's';
+                    brick.style.transform = `scale(${sizeScale})`;
+
+                    container.appendChild(brick);
+
+                    setTimeout(() => {
+                        brick.remove();
+                    }, duration * 1000);
+                }, i * 150);
+            }
+        }
+
+        window.addEventListener('load', async () => {
+            loadCustomSliderImages();
+            updateCartCount();
+            createFallingBricks(40);
+            await loadProducts();
+        });
+    async function checkAuth() {
+
+        const { data: { session } } =
+            await supabaseClient.auth.getSession();
+
+        const accountLink =
+            document.getElementById("account-link");
+
+        if (!accountLink) return;
+
+
+        if (session) {
+
+            const user = session.user;
+
+            const name =
+                user.user_metadata?.full_name ||
+                user.email?.split("@")[0] ||
+                "Hesabım";
+
+
+            accountLink.innerHTML =
+                `<i class="fa-solid fa-user"></i> ${name}`;
+
+            accountLink.href = "#";
+
+            accountLink.onclick = async function(event) {
+
+                event.preventDefault();
+
+                const logout = confirm(
+                    "Hesabdan çıxmaq istəyirsiniz?"
+                );
+
+                if (!logout) return;
+
+
+                const { error } =
+                    await supabaseClient.auth.signOut();
+
+
+                if (error) {
+
+                    alert(
+                        "Çıxış zamanı xəta baş verdi."
+                    );
+
+                    return;
+                }
+
+
+                window.location.reload();
+
+            };
+
+        } else {
+
+            accountLink.innerHTML =
+                '<i class="fa-solid fa-user-plus"></i> Hesab Yarat';
+
+            accountLink.href = "register.html";
+
+            accountLink.onclick = null;
+
+        }
+
+    }
+
+
+    supabaseClient.auth.onAuthStateChange(
+        function(event, session) {
+
+            checkAuth();
+
+        }
+    );
+
+
+    window.addEventListener("load", function() {
+
+        checkAuth();
+
+    });
+
+        
+    </script>
+</body>
+</html>

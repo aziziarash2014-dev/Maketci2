@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>MAKETÇİ - Məhsul Detalı</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+    .product-detail-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-top: 40px;
+    }
+
+    .gallery-main img {
+        width: 100%;
+        height: 380px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #f4f4f4;
+    }
+
+    .gallery-thumbs {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    .gallery-thumbs img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .gallery-thumbs img:hover {
+        border-color: var(--orange, #ff6b00);
+    }
+
+    .detail-info h1 {
+        color: var(--dark-green, #0f281e);
+        font-size: 32px;
+        margin-bottom: 15px;
+    }
+
+    .detail-price-box {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .detail-price {
+        font-size: 28px;
+        color: var(--orange, #ff6b00);
+        font-weight: 800;
+    }
+
+    .meta-item {
+        margin-bottom: 12px;
+        font-size: 16px;
+        color: var(--text-dark, #333);
+    }
+
+    .meta-item span {
+        font-weight: bold;
+        color: var(--dark-green, #0f281e);
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+    .quantity-control input {
+        width: 70px;
+        padding: 8px;
+        text-align: center;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .product-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .order-btn {
+        width: 100%;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 8px;
+        background: var(--orange, #ff6b00);
+        color: white;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .order-btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.92;
+    }
+
+    .cart-btn {
+        width: 100%;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 8px;
+        background: var(--dark-green, #0f281e);
+        color: white;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .cart-btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.92;
+    }
+
+    .loading-detail,
+    .error-detail {
+        background: #fff;
+        padding: 60px 20px;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .error-detail {
+        color: #c62828;
+    }
+
+    @media (max-width: 768px) {
+        .product-detail-container {
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .detail-info h1 {
+            font-size: 26px;
+        }
+
+        .gallery-main img {
+            height: 300px;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<!-- HEADER -->
+<header>
+
+    <div class="logo">
+        <a href="index.html">
+            MAKET<span>Çİ</span>
+        </a>
+    </div>
+
+    <nav>
+        <ul>
+
+            <li>
+                <a href="index.html">
+                    Ana Səhifə
+                </a>
+            </li>
+
+            <li>
+                <a href="Shop.html">
+                    Məhsullar
+                </a>
+            </li>
+
+            <li>
+                <a href="card.html">
+                    Səbət
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <div class="nav-buttons">
+
+        <a href="admin.html" class="btn-admin">
+            Admin Panel
+        </a>
+
+        <a href="card.html" class="btn-cart">
+            Səbət
+            (<span id="cart-count">0</span>)
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- MAIN -->
+
+<main class="container">
+
+    <div id="detail-content">
+
+        <div class="loading-detail">
+            <i class="fas fa-spinner fa-spin"></i>
+            Məhsul yüklənir...
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        &copy; 2026 MAKETÇİ. Bütün hüquqlar qorunur.
+    </p>
+
+</footer>
+
+
+<script>
+
+    /* =========================================
+       SUPABASE
+    ========================================= */
+
+    const SUPABASE_URL =
+        "https://iktngczlingbdueobpor.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_w2ZvQMrsLCBDnysA0zyARQ_BbcoXXLR";
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    /* =========================================
+       GLOBAL PRODUCT
+    ========================================= */
+
+    let currentProduct = null;
+
+
+    /* =========================================
+       GET PRODUCT ID
+    ========================================= */
+
+    function getProductId() {
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        return params.get("id");
+    }
+
+
+    /* =========================================
+       ESCAPE HTML
+    ========================================= */
+
+    function escapeHTML(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    /* =========================================
+       LOAD PRODUCT
+    ========================================= */
+
+    async function loadProductDetail() {
+
+        const container =
+            document.getElementById(
+                "detail-content"
+            );
+
+        const productId =
+            getProductId();
+
+
+        if (!productId) {
+
+            container.innerHTML = `
+                <div class="error-detail">
+                    Məhsul ID-si tapılmadı.
+                    <br><br>
+                    <a href="Shop.html">
+                        Məhsullara qayıt
+                    </a>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        /* SUPABASE-DƏN MƏHSULU GƏTİR */
+
+        const {
+            data: product,
+            error
+        } = await supabaseClient
+            .from("products")
+            .select("*")
+            .eq("id", productId)
+            .single();
+
+
+        if (error || !product) {
+
+            console.error(
+                "Product error:",
+                error
+            );
+
+            container.innerHTML = `
+                <div class="error-detail">
+
+                    <h2>
+                        Məhsul tapılmadı!
+                    </h2>
+
+                    <p>
+                        Bu məhsul artıq mövcud deyil
+                        və ya məhsul ID-si yanlışdır.
+                    </p>
+
+                    <br>
+
+                    <a href="Shop.html">
+                        ← Məhsullara qayıt
+                    </a>
+
+                </div>
+            `;
+
+            return;
+        }
+
+
+        currentProduct = product;
+
+
+        /* MƏHSUL MƏLUMATLARI */
+
+        const name =
+            escapeHTML(
+                product.name ||
+                "Adsız məhsul"
+            );
+
+
+        const price =
+            parseFloat(
+                product.price || 0
+            );
+
+
+        const description =
+            escapeHTML(
+                product.description ||
+                "Təsvir yoxdur."
+            );
+
+
+        const image =
+            product.image ||
+            "https://via.placeholder.com/800x600?text=Maketci";
+
+
+        const stock =
+            product.stock !== undefined &&
+            product.stock !== null
+                ? product.stock
+                : 999;
+
+
+        /* ƏLAVƏ ŞƏKİLLƏR */
+
+        let thumbsHTML = `
+
+            <img
+                src="${escapeHTML(image)}"
+                onclick="changeImage(this.src)"
+                alt="${name}"
+            >
+
+        `;
+
+
+        if (product.image2) {
+
+            thumbsHTML += `
+
+                <img
+                    src="${escapeHTML(product.image2)}"
+                    onclick="changeImage(this.src)"
+                    alt="${name}"
+                >
+
+            `;
+
+        }
+
+
+        if (product.image3) {
+
+            thumbsHTML += `
+
+                <img
+                    src="${escapeHTML(product.image3)}"
+                    onclick="changeImage(this.src)"
+                    alt="${name}"
+                >
+
+            `;
+
+        }
+
+
+        /* MƏHSULU GÖSTƏR */
+
+        container.innerHTML = `
+
+            <div class="product-detail-container">
+
+                <!-- GALLERY -->
+
+                <div class="gallery">
+
+                    <div class="gallery-main">
+
+                        <img
+                            src="${escapeHTML(image)}"
+                            id="main-img"
+                            alt="${name}"
+                            onerror="
+                                this.src='https://via.placeholder.com/800x600?text=Maketci'
+                            "
+                        >
+
+                    </div>
+
+
+                    <div class="gallery-thumbs">
+
+                        ${thumbsHTML}
+
+                    </div>
+
+                </div>
+
+
+                <!-- INFO -->
+
+                <div class="detail-info">
+
+                    <h1>
+                        ${name}
+                    </h1>
+
+
+                    <div class="detail-price-box">
+
+                        <span class="detail-price">
+
+                            ${price.toFixed(2)} AZN
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="meta-item">
+
+                        <span>ID:</span>
+                        ${escapeHTML(product.id)}
+
+                    </div>
+
+
+                    <div class="meta-item">
+
+                        <span>Stokda:</span>
+                        ${stock} ədəd
+
+                    </div>
+
+
+                    <p style="
+                        margin:20px 0;
+                        line-height:1.6;
+                        color:var(--text-desc,#555);
+                    ">
+
+                        ${description}
+
+                    </p>
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="quantity-control">
+
+                        <label for="qty">
+                            <b>Miqdar:</b>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="qty"
+                            value="1"
+                            min="1"
+                            max="${stock}"
+                        >
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="product-buttons">
+
+                        <button
+                            class="order-btn"
+                            onclick="orderProduct()"
+                        >
+
+                            🛒 Sifariş et
+
+                        </button>
+
+
+                        <button
+                            class="cart-btn"
+                            onclick="addToCartDetailed()"
+                        >
+
+                            🛍️ Səbətə əlavə et
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =========================================
+       CHANGE IMAGE
+    ========================================= */
+
+    function changeImage(src) {
+
+        const mainImage =
+            document.getElementById(
+                "main-img"
+            );
+
+        if (mainImage) {
+
+            mainImage.src = src;
+
+        }
+
+    }
+
+
+    /* =========================================
+       CHECK LOGIN + ORDER
+    ========================================= */
+
+    async function orderProduct() {
+
+        if (!currentProduct) {
+
+            alert(
+                "Məhsul hələ yüklənməyib."
+            );
+
+            return;
+        }
+
+
+        const {
+            data: {
+                user
+            }
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        /* HESAB YOXDUR */
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+
+        /* MIQDAR */
+
+        const qtyInput =
+            document.getElementById(
+                "qty"
+            );
+
+
+        let qty =
+            parseInt(
+                qtyInput?.value
+            ) || 1;
+
+
+        const stock =
+            currentProduct.stock !== undefined &&
+            currentProduct.stock !== null
+                ? Number(currentProduct.stock)
+                : 999;
+
+
+        if (qty < 1) {
+
+            qty = 1;
+
+        }
+
+
+        if (qty > stock) {
+
+            alert(
+                "Stokda bu qədər məhsul yoxdur."
+            );
+
+            return;
+        }
+
+
+        /*
+            HESAB VARSA
+            REAL CHECKOUT SƏHİFƏSİNƏ GET
+        */
+
+        window.location.href =
+            `checkout.html?id=${encodeURIComponent(
+                currentProduct.id
+            )}&qty=${encodeURIComponent(
+                qty
+            )}`;
+
+    }
+
+
+    /* =========================================
+       ADD TO CART
+    ========================================= */
+
+    function addToCartDetailed() {
+
+        if (!currentProduct) {
+
+            alert(
+                "Məhsul hələ yüklənməyib."
+            );
+
+            return;
+        }
+
+
+        const qtyInput =
+            document.getElementById(
+                "qty"
+            );
+
+
+        let qty =
+            parseInt(
+                qtyInput?.value
+            ) || 1;
+
+
+        if (qty < 1) {
+
+            qty = 1;
+
+        }
+
+
+        const stock =
+            currentProduct.stock !== undefined &&
+            currentProduct.stock !== null
+                ? Number(currentProduct.stock)
+                : 999;
+
+
+        if (qty > stock) {
+
+            alert(
+                "Stokda bu qədər məhsul yoxdur."
+            );
+
+            return;
+        }
+
+
+        let cart =
+            JSON.parse(
+                localStorage.getItem(
+                    "maketci_cart"
+                )
+            ) || [];
+
+
+        for (
+            let i = 0;
+            i < qty;
+            i++
+        ) {
+
+            cart.push({
+
+                id:
+                    currentProduct.id,
+
+                title:
+                    currentProduct.name ||
+                    "Adsız məhsul",
+
+                price:
+                    Number(
+                        currentProduct.price
+                    ) || 0
+
+            });
+
+        }
+
+
+        localStorage.setItem(
+            "maketci_cart",
+            JSON.stringify(cart)
+        );
+
+
+        updateCartCount();
+
+
+        alert(
+            `${qty} ədəd ${currentProduct.name} səbətə əlavə olundu!`
+        );
+
+    }
+
+
+    /* =========================================
+       CART COUNT
+    ========================================= */
+
+    function updateCartCount() {
+
+        const cart =
+            JSON.parse(
+                localStorage.getItem(
+                    "maketci_cart"
+                )
+            ) || [];
+
+
+        const counter =
+            document.getElementById(
+                "cart-count"
+            );
+
+
+        if (counter) {
+
+            counter.innerText =
+                cart.length;
+
+        }
+
+    }
+
+
+    /* =========================================
+       PAGE START
+    ========================================= */
+
+    window.addEventListener(
+        "load",
+        function () {
+
+            loadProductDetail();
+
+            updateCartCount();
+
+        }
+    );
+
+</script>
+```
+
+</body>
+</html>

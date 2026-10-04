@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAKETÇİ - Login</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #f4fff7, #fff7ed);
+            color: #222;
+        }
+
+        header {
+            width: 100%;
+            background: #006225;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 65px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 9px 12px;
+            border-radius: 8px;
+            transition: 0.25s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: #ff9900;
+        }
+
+        .nav-links .register-btn-nav {
+            background: #ff7a00;
+        }
+
+        .auth-section {
+            min-height: calc(100vh - 95px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 40px;
+            border-radius: 22px;
+            border-top: 5px solid #ff7a00;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.10);
+        }
+
+        .login-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #ecfdf3;
+            color: #16a34a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        .auth-container h1 {
+            text-align: center;
+            margin: 5px 0 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #16a34a;
+        }
+
+        .form-group input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 14px 14px 43px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .form-group input:focus {
+            border-color: #ff7a00;
+            box-shadow: 0 0 0 3px rgba(255,122,0,0.10);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff7a00, #ff9500);
+            color: white;
+            border: none;
+            border-radius: 11px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 800;
+            transition: 0.25s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            display: none;
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .message.success {
+            display: block;
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .message.error {
+            display: block;
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .switch-page {
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+        }
+
+        .switch-page a {
+            color: #16a34a;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        @media (max-width: 800px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .auth-container {
+                padding: 30px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            <img src="Untitled.png" alt="MAKETÇİ">
+        </a>
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                Ana Səhifə
+            </a>
+
+            <a href="Shop.html">
+                <i class="fa-solid fa-store"></i>
+                Mağaza
+            </a>
+
+            <a href="card.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Səbət
+            </a>
+
+            <a href="register.html" class="register-btn-nav">
+                <i class="fa-solid fa-user-plus"></i>
+                Qeydiyyat
+            </a>
+
+        </div>
+
+    </nav>
+</header>
+
+
+<main class="auth-section">
+
+    <div class="auth-container">
+
+        <div class="login-icon">
+            <i class="fa-solid fa-right-to-bracket"></i>
+        </div>
+
+        <h1>Giriş et</h1>
+
+        <p class="subtitle">
+            MAKETÇİ hesabına daxil ol 🚀
+        </p>
+
+        <form id="loginForm">
+
+            <div class="form-group">
+
+                <label for="loginEmail">
+                    E-poçt
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        required
+                        placeholder="example@mail.com"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="loginPassword">
+                    Şifrə
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        required
+                        placeholder="Şifrəniz"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button type="submit" class="auth-btn" id="loginBtn">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Daxil Ol
+
+            </button>
+
+            <div id="message" class="message"></div>
+
+        </form>
+
+
+        <div class="switch-page">
+
+            Hesabınız yoxdur?
+
+            <a href="register.html">
+                Qeydiyyatdan keçin →
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+    const SUPABASE_URL = "https://iktngczlingbdueobpor.supabase.co";
+
+    const SUPABASE_KEY = "sb_publishable_w2ZvQMrsLCBDnysA0zyARQ_BbcoXXLR";
+
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+    const loginForm = document.getElementById("loginForm");
+
+    const loginBtn = document.getElementById("loginBtn");
+
+    const message = document.getElementById("message");
+
+
+    loginForm.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const email =
+            document.getElementById("loginEmail").value.trim();
+
+        const password =
+            document.getElementById("loginPassword").value;
+
+
+        message.className = "message";
+
+        message.textContent = "";
+
+        loginBtn.disabled = true;
+
+        loginBtn.innerHTML = "Giriş edilir...";
+
+
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+
+                email: email,
+
+                password: password
+
+            });
+
+
+        if (error) {
+
+            console.error(error);
+
+            message.className = "message error";
+
+            message.textContent =
+                "Email və ya şifrə yanlışdır.";
+
+            loginBtn.disabled = false;
+
+            loginBtn.innerHTML =
+                '<i class="fa-solid fa-right-to-bracket"></i> Daxil Ol';
+
+            return;
+        }
+
+
+        message.className = "message success";
+
+        message.textContent =
+            "Uğurla daxil oldunuz! 🚀";
+
+
+        setTimeout(() => {
+
+            window.location.href = "index.html";
+
+        }, 800);
+
+    });
+
+</script>
+
+</body>
+</html>

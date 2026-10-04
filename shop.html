@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAKETÇİ - Məhsullar</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 20px;
+            padding: 4px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background-color: #0b551e !important;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            font-size: 14px;
+            width: 180px;
+            border-radius: 20px;
+        }
+
+        .shop-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .shop-header h1 {
+            font-size: 32px;
+            color: var(--dark-green, #0f281e);
+            margin-bottom: 10px;
+        }
+
+        .shop-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .shop-search-bar {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            align-items: center;
+            background: #f4f4f4;
+            border-radius: 25px;
+            padding: 8px 18px;
+            border: 1px solid #ddd;
+        }
+
+        .shop-search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            padding-left: 10px;
+            font-size: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-group select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-weight: 600;
+            color: #0f281e;
+            outline: none;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .badge-side {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, var(--orange, #ff6b00), #ff9900);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+        }
+
+        .badge-left {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #e63946;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0f281e;
+            color: #e0e0e0;
+            padding: 50px 0 20px 0;
+            margin-top: 60px;
+            border-top: 3px solid var(--orange, #ff6b00);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-col h3,
+        .footer-col h4 {
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .footer-col h3 span {
+            color: var(--orange, #ff6b00);
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--orange, #ff6b00);
+            padding-left: 5px;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .footer-socials a {
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-socials a:hover {
+            background: var(--orange, #ff6b00);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+            color: #888;
+        }
+
+        .loading-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 0;
+            font-size: 20px;
+            color: #0f281e;
+        }
+
+        .error-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 0;
+            font-size: 18px;
+            color: #c62828;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <a href="index.html">MAKET<span>Çİ</span></a>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Ana Səhifə</a>
+                </li>
+
+                <li>
+                    <a href="Shop.html" class="active">Məhsullar</a>
+                </li>
+
+                <li>
+                    <a href="index.html#about-section">Haqqımızda</a>
+                </li>
+
+                <li>
+                    <a href="card.html">Səbət</a>
+                </li>
+
+                <li>
+                    <a href="register.html">Hesab Yarat</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="search-box">
+            <input
+                type="text"
+                id="nav-search-input"
+                placeholder="Məhsul axtar..."
+                oninput="syncAndFilter(this.value)"
+            >
+        </div>
+
+        <div class="nav-buttons">
+            <a href="admin.html" class="btn-admin">Admin Panel</a>
+
+            <a href="card.html" class="btn-cart">
+                Səbət (<span id="cart-count">0</span>)
+            </a>
+        </div>
+    </header>
+
+
+    <!-- MAIN -->
+    <main class="container">
+
+        <div class="shop-header">
+            <h1>Bütün Məhsullarımız</h1>
+            <p>
+                Eksklüziv mini kərpiclər, ev maketləri və 3D modelları kəşf edin.
+            </p>
+        </div>
+
+
+        <!-- SEARCH + FILTER -->
+        <div class="shop-controls">
+
+            <div class="shop-search-bar">
+                <i class="fas fa-search" style="color: #777;"></i>
+
+                <input
+                    type="text"
+                    id="shop-search-input"
+                    placeholder="Məhsul adı ilə axtarın..."
+                    oninput="filterShopProducts()"
+                >
+            </div>
+
+
+            <div class="filter-group">
+
+                <select id="category-select" onchange="filterShopProducts()">
+                    <option value="all">Bütün Kateqoriyalar</option>
+                    <option value="ev">Mini Evlər</option>
+                    <option value="tikinti">Kərpic Dəstləri</option>
+                    <option value="3d">3D Modellər</option>
+                </select>
+
+
+                <select id="sort-select" onchange="filterShopProducts()">
+                    <option value="default">Sıralama: Varsayılan</option>
+                    <option value="cheap">Qiymət: Ucuzdan Bahaya</option>
+                    <option value="expensive">Qiymət: Bahadan Ucuza</option>
+                    <option value="popular">Ən Çox Satanlar</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRODUCTS -->
+        <div class="product-grid" id="shop-products-grid">
+            <div class="loading-products">
+                <i class="fas fa-spinner fa-spin"></i>
+                Məhsullar yüklənir...
+            </div>
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="footer-container">
+
+            <div class="footer-col">
+
+                <h3>MAKET<span>Çİ</span></h3>
+
+                <p>
+                    İdeyaları maketə çeviririk.
+                    Ən son 3D texnologiyalar ilə detallı
+                    və eksklüziv maketlər hazırlayırıq.
+                </p>
+
+                <div class="footer-socials">
+
+                    <a href="https://instagram.com" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="https://facebook.com" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+
+                    <a href="https://wa.me/994500000000" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+
+                    <a href="https://tiktok.com" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-col">
+
+                <h4>Faydalı Keçidlər</h4>
+
+                <ul>
+                    <li>
+                        <a href="index.html">Ana Səhifə</a>
+                    </li>
+
+                    <li>
+                        <a href="Shop.html">Məhsullar</a>
+                    </li>
+
+                    <li>
+                        <a href="index.html#about-section">Haqqımızda</a>
+                    </li>
+
+                    <li>
+                        <a href="card.html">Səbətim</a>
+                    </li>
+                </ul>
+
+            </div>
+
+
+            <div class="footer-col">
+
+                <h4>Əlaqə Məlumatları</h4>
+
+                <ul>
+
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        Bakı şəhəri, Azərbaycan
+                    </li>
+
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        +994 (50) 000-00-00
+                    </li>
+
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        info@maketci.az
+                    </li>
+
+                    <li>
+                        <i class="fas fa-clock"></i>
+                        B.E - Ş. 09:00 - 19:00
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 MAKETÇİ. Bütün hüquqlar qorunur.</p>
+        </div>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script>
+
+        /* ================================
+           SUPABASE
+        ================================= */
+
+        const SUPABASE_URL =
+            "https://iktngczlingbdueobpor.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_w2ZvQMrsLCBDnysA0zyARQ_BbcoXXLR";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+
+
+        /* ================================
+           PRODUCTS
+        ================================= */
+
+        let allProducts = [];
+
+
+        async function loadProducts() {
+
+            const container =
+                document.getElementById("shop-products-grid");
+
+            container.innerHTML = `
+                <div class="loading-products">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Məhsullar yüklənir...
+                </div>
+            `;
+
+
+            const { data, error } =
+                await supabaseClient
+                    .from("products")
+                    .select("*")
+                    .order("id", {
+                        ascending: true
+                    });
+
+
+            if (error) {
+
+                console.error(
+                    "Supabase məhsul xətası:",
+                    error
+                );
+
+                container.innerHTML = `
+                    <div class="error-products">
+                        Məhsullar yüklənərkən xəta baş verdi.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            allProducts = data || [];
+
+            filterShopProducts();
+        }
+
+
+
+        /* ================================
+           NAV SEARCH
+        ================================= */
+
+        function syncAndFilter(val) {
+
+            document.getElementById(
+                "shop-search-input"
+            ).value = val;
+
+            filterShopProducts();
+        }
+
+
+
+        /* ================================
+           FILTER
+        ================================= */
+
+        function filterShopProducts() {
+
+            const sortType =
+                document.getElementById(
+                    "sort-select"
+                ).value;
+
+
+            const categoryType =
+                document.getElementById(
+                    "category-select"
+                ).value;
+
+
+            const searchQuery =
+                document.getElementById(
+                    "shop-search-input"
+                ).value
+                .toLowerCase()
+                .trim();
+
+
+            let filtered =
+                [...allProducts];
+
+
+            /*
+                Axtarış
+            */
+
+            filtered =
+                filtered.filter(product => {
+
+                    const name =
+                        String(
+                            product.name || ""
+                        ).toLowerCase();
+
+                    return name.includes(
+                        searchQuery
+                    );
+                });
+
+
+            /*
+                Kateqoriya
+
+                Hazırkı Supabase products
+                cədvəlində category olmadığı
+                üçün category = all olanda
+                bütün məhsullar göstərilir.
+            */
+
+            if (categoryType !== "all") {
+
+                filtered =
+                    filtered.filter(product => {
+
+                        return (
+                            product.category ===
+                            categoryType
+                        );
+
+                    });
+
+            }
+
+
+            /*
+                Sıralama
+            */
+
+            if (sortType === "cheap") {
+
+                filtered.sort(
+                    (a, b) =>
+                        parseFloat(a.price || 0) -
+                        parseFloat(b.price || 0)
+                );
+
+            }
+
+            else if (sortType === "expensive") {
+
+                filtered.sort(
+                    (a, b) =>
+                        parseFloat(b.price || 0) -
+                        parseFloat(a.price || 0)
+                );
+
+            }
+
+            else if (sortType === "popular") {
+
+                filtered.sort(
+                    (a, b) =>
+                        (b.salesCount || 0) -
+                        (a.salesCount || 0)
+                );
+
+            }
+
+
+            renderShopProducts(filtered);
+        }
+
+
+
+        /* ================================
+           ESCAPE HTML
+        ================================= */
+
+        function escapeHTML(value) {
+
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+
+        /* ================================
+           ESCAPE JS
+        ================================= */
+
+        function escapeQuotes(value) {
+
+            return String(value ?? "")
+                .replace(/\\/g, "\\\\")
+                .replace(/'/g, "\\'");
+        }
+
+
+
+        /* ================================
+           RENDER PRODUCTS
+        ================================= */
+
+        function renderShopProducts(list) {
+
+            const container =
+                document.getElementById(
+                    "shop-products-grid"
+                );
+
+
+            if (list.length === 0) {
+
+                container.innerHTML = `
+                    <p style="
+                        grid-column: 1/-1;
+                        text-align:center;
+                        font-size:18px;
+                        padding:40px 0;
+                    ">
+                        Axtarışınıza uyğun heç bir məhsul tapılmadı. 🔍
+                    </p>
+                `;
+
+                return;
+            }
+
+
+            container.innerHTML = "";
+
+
+            list.forEach(product => {
+
+                const id =
+                    product.id;
+
+                const name =
+                    escapeHTML(
+                        product.name ||
+                        "Adsız məhsul"
+                    );
+
+
+                const rawName =
+                    product.name ||
+                    "Adsız məhsul";
+
+
+                const price =
+                    parseFloat(
+                        product.price || 0
+                    );
+
+
+                const image =
+                    product.image ||
+                    "https://via.placeholder.com/400x300?text=Maketci";
+
+
+                const description =
+                    escapeHTML(
+                        product.description ||
+                        ""
+                    );
+
+
+                container.innerHTML += `
+
+                    <div
+                        class="product-card"
+                        onclick="window.location.href='product.html?id=${id}'"
+                        style="
+                            cursor:pointer;
+                            position:relative;
+                        "
+                    >
+
+                        <span class="badge-side">
+                            TREND
+                        </span>
+
+
+                        <img
+                            src="${escapeHTML(image)}"
+                            alt="${name}"
+                        >
+
+
+                        <div class="product-info">
+
+                            <h3 class="product-title">
+                                ${name}
+                            </h3>
+
+
+                            <p class="product-desc">
+                                ${description}
+                            </p>
+
+
+                            <div class="price-box">
+
+                                <span class="product-price">
+                                    ${price} AZN
+                                </span>
+
+                            </div>
+
+
+                            <button
+                                class="btn-add-cart"
+                                onclick="
+                                    event.stopPropagation();
+                                    addToCart(
+                                        '${escapeQuotes(rawName)}',
+                                        ${price},
+                                        ${id}
+                                    )
+                                "
+                            >
+                                Səbətə At
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+        }
+
+
+
+        /* ================================
+           CART
+        ================================= */
+
+        function addToCart(
+            title,
+            price,
+            id
+        ) {
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem(
+                        "maketci_cart"
+                    )
+                ) || [];
+
+
+            cart.push({
+                id: id,
+                title: title,
+                price: price
+            });
+
+
+            localStorage.setItem(
+                "maketci_cart",
+                JSON.stringify(cart)
+            );
+
+
+            updateCartCount();
+
+
+            alert(
+                title +
+                " səbətə əlavə olundu!"
+            );
+        }
+
+
+
+        /* ================================
+           CART COUNT
+        ================================= */
+
+        function updateCartCount() {
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem(
+                        "maketci_cart"
+                    )
+                ) || [];
+
+
+            document.getElementById(
+                "cart-count"
+            ).innerText =
+                cart.length;
+        }
+
+
+
+        /* ================================
+           START
+        ================================= */
+
+        window.addEventListener(
+            "load",
+            function () {
+
+                loadProducts();
+
+                updateCartCount();
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

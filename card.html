@@ -1,0 +1,2198 @@
+```html
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MAKETÇİ - Səbət</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        /* =========================================================
+           🧱 MAKETÇİ CART
+           DARK GREEN EXTREME ANIMATIONS
+           ========================================================= */
+
+        :root {
+
+            --maket-green: #0b3d2e;
+            --maket-dark-green: #06281f;
+            --maket-green-light: #159a70;
+            --maket-neon: #20c997;
+            --maket-green-soft: rgba(32,201,151,.16);
+
+        }
+
+
+        /* =========================================================
+           PAGE
+           ========================================================= */
+
+        body {
+
+            overflow-x: hidden;
+
+        }
+
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        header {
+
+            animation:
+                headerAppear .8s
+                cubic-bezier(.17,.89,.32,1.28);
+
+        }
+
+
+        @keyframes headerAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-100%);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        .logo a {
+
+            display: inline-block;
+
+            transition:
+                transform .35s ease,
+                text-shadow .35s ease;
+
+        }
+
+
+        .logo a:hover {
+
+            transform:
+                scale(1.08)
+                rotate(-2deg);
+
+            text-shadow:
+                0 0 20px
+                rgba(32,201,151,.5);
+
+        }
+
+
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+
+        nav ul li {
+
+            animation:
+                navItem .6s
+                cubic-bezier(.17,.89,.32,1.28)
+                both;
+
+        }
+
+
+        nav ul li:nth-child(1) {
+            animation-delay: .15s;
+        }
+
+        nav ul li:nth-child(2) {
+            animation-delay: .25s;
+        }
+
+        nav ul li:nth-child(3) {
+            animation-delay: .35s;
+        }
+
+
+        @keyframes navItem {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-20px)
+                    scale(.8);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+
+        nav ul li a {
+
+            position: relative;
+
+        }
+
+
+        nav ul li a::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 50%;
+
+            bottom: -7px;
+
+            width: 0;
+
+            height: 2px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #0b7d5c,
+                    #20c997
+                );
+
+            transform:
+                translateX(-50%);
+
+            transition:
+                width .35s ease;
+
+        }
+
+
+        nav ul li a:hover::after,
+        nav ul li a.active::after {
+
+            width: 100%;
+
+        }
+
+
+        /* =========================================================
+           CART BUTTON
+           ========================================================= */
+
+        .btn-cart {
+
+            animation:
+                cartButtonPulse
+                2.5s ease-in-out infinite;
+
+        }
+
+
+        @keyframes cartButtonPulse {
+
+            0%,100% {
+
+                box-shadow:
+                    0 0 0
+                    rgba(32,201,151,0);
+
+            }
+
+            50% {
+
+                box-shadow:
+                    0 0 20px
+                    rgba(32,201,151,.3);
+
+            }
+
+        }
+
+
+        /* =========================================================
+           SECTION TITLE
+           ========================================================= */
+
+        .section-title {
+
+            position: relative;
+
+            animation:
+                titleEntrance
+                1s
+                cubic-bezier(.17,.89,.32,1.28);
+
+        }
+
+
+        @keyframes titleEntrance {
+
+            0% {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-50px)
+                    scale(.65)
+                    rotate(-4deg);
+
+                filter:
+                    blur(10px);
+
+            }
+
+            70% {
+
+                opacity: 1;
+
+                transform:
+                    translateY(5px)
+                    scale(1.06)
+                    rotate(1deg);
+
+                filter:
+                    blur(0);
+
+            }
+
+            100% {
+
+                transform:
+                    translateY(0)
+                    scale(1)
+                    rotate(0);
+
+            }
+
+        }
+
+
+        .section-title::after {
+
+            content: "";
+
+            display: block;
+
+            width: 70px;
+
+            height: 4px;
+
+            margin:
+                12px auto 0;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #0b7d5c,
+                    #20c997,
+                    transparent
+                );
+
+            animation:
+                titleLine
+                2s ease-in-out infinite;
+
+        }
+
+
+        @keyframes titleLine {
+
+            0%,100% {
+
+                width: 50px;
+
+                opacity: .5;
+
+            }
+
+            50% {
+
+                width: 150px;
+
+                opacity: 1;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           CART TABLE
+           ========================================================= */
+
+        .cart-table {
+
+            width: 100%;
+
+            border-collapse:
+                collapse;
+
+            margin-top: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--card-bg),
+                    rgba(11,61,46,.05)
+                );
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            position: relative;
+
+            box-shadow:
+                0 12px 35px
+                rgba(0,0,0,.09),
+
+                0 0 0
+                rgba(32,201,151,0);
+
+            animation:
+                cartTableEnter
+                1s
+                cubic-bezier(.17,.89,.32,1.28);
+
+            transition:
+                transform .45s ease,
+                box-shadow .45s ease;
+
+        }
+
+
+        .cart-table:hover {
+
+            transform:
+                translateY(-6px);
+
+            box-shadow:
+                0 25px 55px
+                rgba(0,0,0,.15),
+
+                0 0 35px
+                rgba(32,201,151,.18);
+
+        }
+
+
+        @keyframes cartTableEnter {
+
+            0% {
+
+                opacity: 0;
+
+                transform:
+                    translateY(80px)
+                    scale(.90)
+                    rotateX(12deg);
+
+                filter:
+                    blur(10px);
+
+            }
+
+            60% {
+
+                opacity: 1;
+
+                transform:
+                    translateY(-10px)
+                    scale(1.02)
+                    rotateX(-2deg);
+
+                filter:
+                    blur(0);
+
+            }
+
+            100% {
+
+                transform:
+                    translateY(0)
+                    scale(1)
+                    rotateX(0);
+
+            }
+
+        }
+
+
+        /* =========================================================
+           TABLE HEADER
+           ========================================================= */
+
+        .cart-table th {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #03150f,
+                    #0b3d2e,
+                    #126b50,
+                    #03150f
+                );
+
+            background-size:
+                300% 300%;
+
+            color:
+                #20c997;
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            animation:
+                headerGradient
+                4s ease infinite,
+
+                headerDrop
+                .8s ease;
+
+        }
+
+
+        @keyframes headerGradient {
+
+            0% {
+
+                background-position:
+                    0% 50%;
+
+            }
+
+            50% {
+
+                background-position:
+                    100% 50%;
+
+            }
+
+            100% {
+
+                background-position:
+                    0% 50%;
+
+            }
+
+        }
+
+
+        @keyframes headerDrop {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        .cart-table th::after {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: -120%;
+
+            width: 70%;
+
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(32,201,151,.35),
+                    transparent
+                );
+
+            transform:
+                skewX(-25deg);
+
+            animation:
+                tableShine
+                3s ease-in-out infinite;
+
+        }
+
+
+        @keyframes tableShine {
+
+            0% {
+
+                left: -120%;
+
+            }
+
+            45% {
+
+                left: 130%;
+
+            }
+
+            100% {
+
+                left: 130%;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           TABLE CELLS
+           ========================================================= */
+
+        .cart-table td {
+
+            padding:
+                15px;
+
+            text-align:
+                left;
+
+            border-bottom:
+                1px solid
+                rgba(11,61,46,.15);
+
+            transition:
+                background-color .35s ease,
+                transform .35s ease,
+                padding-left .35s ease;
+
+        }
+
+
+        .cart-table tbody tr {
+
+            animation:
+                rowEnter
+                .7s
+                cubic-bezier(.17,.89,.32,1.28)
+                both;
+
+            transition:
+                transform .4s ease,
+                background .4s ease,
+                box-shadow .4s ease;
+
+        }
+
+
+        .cart-table tbody tr:nth-child(1) {
+            animation-delay: .15s;
+        }
+
+        .cart-table tbody tr:nth-child(2) {
+            animation-delay: .25s;
+        }
+
+        .cart-table tbody tr:nth-child(3) {
+            animation-delay: .35s;
+        }
+
+        .cart-table tbody tr:nth-child(4) {
+            animation-delay: .45s;
+        }
+
+        .cart-table tbody tr:nth-child(5) {
+            animation-delay: .55s;
+        }
+
+        .cart-table tbody tr:nth-child(6) {
+            animation-delay: .65s;
+        }
+
+        .cart-table tbody tr:nth-child(7) {
+            animation-delay: .75s;
+        }
+
+        .cart-table tbody tr:nth-child(8) {
+            animation-delay: .85s;
+        }
+
+
+        @keyframes rowEnter {
+
+            0% {
+
+                opacity: 0;
+
+                transform:
+                    translateX(-80px)
+                    rotateY(-15deg)
+                    scale(.95);
+
+            }
+
+            70% {
+
+                opacity: 1;
+
+                transform:
+                    translateX(8px)
+                    rotateY(2deg)
+                    scale(1.01);
+
+            }
+
+            100% {
+
+                opacity: 1;
+
+                transform:
+                    translateX(0)
+                    rotateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+
+        .cart-table tbody tr:hover {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(32,201,151,.12),
+                    rgba(32,201,151,.035),
+                    rgba(32,201,151,.12)
+                );
+
+            transform:
+                translateX(8px)
+                scale(1.012);
+
+            box-shadow:
+                inset 5px 0 0 #159a70,
+
+                0 5px 20px
+                rgba(32,201,151,.08);
+
+        }
+
+
+        .cart-table tbody tr:hover td {
+
+            padding-left:
+                20px;
+
+        }
+
+
+        /* =========================================================
+           PRODUCT TITLE
+           ========================================================= */
+
+        .cart-table td:first-child {
+
+            font-weight:
+                700;
+
+            color:
+                var(--text-dark);
+
+            transition:
+                color .3s ease,
+                letter-spacing .3s ease,
+                transform .3s ease;
+
+        }
+
+
+        .cart-table tr:hover td:first-child {
+
+            color:
+                #0b7d5c;
+
+            letter-spacing:
+                .6px;
+
+            transform:
+                translateX(3px);
+
+        }
+
+
+        /* =========================================================
+           PRICE
+           ========================================================= */
+
+        .cart-table td:nth-child(2) {
+
+            color:
+                #0b7d5c;
+
+            font-weight:
+                800;
+
+            transition:
+                transform .3s ease,
+                text-shadow .3s ease;
+
+        }
+
+
+        .cart-table tr:hover td:nth-child(2) {
+
+            transform:
+                scale(1.1)
+                translateX(5px);
+
+            text-shadow:
+                0 0 14px
+                rgba(32,201,151,.45);
+
+        }
+
+
+        /* =========================================================
+           DELETE BUTTON
+           ========================================================= */
+
+        .btn-delete {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #06281f,
+                    #0b3d2e,
+                    #126b50,
+                    #06281f
+                );
+
+            background-size:
+                250% 250%;
+
+            color:
+                #fff;
+
+            border:
+                1px solid
+                rgba(32,201,151,.25);
+
+            padding:
+                9px 16px;
+
+            border-radius:
+                8px;
+
+            cursor:
+                pointer;
+
+            font-weight:
+                700;
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            transition:
+                transform .35s
+                cubic-bezier(.17,.89,.32,1.28),
+
+                box-shadow .35s ease;
+
+            box-shadow:
+                0 4px 12px
+                rgba(11,61,46,.25);
+
+            animation:
+                deleteGradient
+                4s ease infinite;
+
+        }
+
+
+        @keyframes deleteGradient {
+
+            0% {
+
+                background-position:
+                    0% 50%;
+
+            }
+
+            50% {
+
+                background-position:
+                    100% 50%;
+
+            }
+
+            100% {
+
+                background-position:
+                    0% 50%;
+
+            }
+
+        }
+
+
+        .btn-delete::before {
+
+            content: "";
+
+            position:
+                absolute;
+
+            top:
+                0;
+
+            left:
+                -120%;
+
+            width:
+                70%;
+
+            height:
+                100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,.35),
+                    transparent
+                );
+
+            transform:
+                skewX(-25deg);
+
+            transition:
+                left .55s ease;
+
+        }
+
+
+        .btn-delete:hover {
+
+            transform:
+                translateY(-4px)
+                scale(1.09)
+                rotate(-2deg);
+
+            box-shadow:
+                0 10px 25px
+                rgba(11,61,46,.35),
+
+                0 0 20px
+                rgba(32,201,151,.25);
+
+        }
+
+
+        .btn-delete:hover::before {
+
+            left:
+                130%;
+
+        }
+
+
+        .btn-delete:active {
+
+            transform:
+                scale(.90)
+                rotate(3deg);
+
+        }
+
+
+        /* =========================================================
+           CART SUMMARY
+           ========================================================= */
+
+        .cart-summary {
+
+            margin-top:
+                30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--card-bg),
+                    rgba(11,61,46,.06),
+                    #f4fff9
+                );
+
+            padding:
+                24px;
+
+            border-radius:
+                16px;
+
+            border:
+                1px solid
+                rgba(32,201,151,.22);
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 12px 35px
+                rgba(0,0,0,.07),
+
+                0 0 0
+                rgba(32,201,151,0);
+
+            animation:
+                summaryEnter
+                1s
+                cubic-bezier(.17,.89,.32,1.28);
+
+            transition:
+                transform .45s ease,
+                box-shadow .45s ease;
+
+        }
+
+
+        .cart-summary:hover {
+
+            transform:
+                translateY(-7px)
+                scale(1.012);
+
+            box-shadow:
+                0 25px 50px
+                rgba(0,0,0,.12),
+
+                0 0 35px
+                rgba(32,201,151,.15);
+
+        }
+
+
+        @keyframes summaryEnter {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(70px)
+                    scale(.88)
+                    rotateX(-18deg);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1)
+                    rotateX(0);
+
+            }
+
+        }
+
+
+        .cart-summary::before {
+
+            content: "";
+
+            position:
+                absolute;
+
+            top:
+                0;
+
+            left:
+                -120%;
+
+            width:
+                70%;
+
+            height:
+                100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(32,201,151,.16),
+                    transparent
+                );
+
+            transform:
+                skewX(-25deg);
+
+            animation:
+                summaryShine
+                3.5s ease-in-out infinite;
+
+        }
+
+
+        @keyframes summaryShine {
+
+            0% {
+
+                left:
+                    -120%;
+
+            }
+
+            45% {
+
+                left:
+                    130%;
+
+            }
+
+            100% {
+
+                left:
+                    130%;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           TOTAL
+           ========================================================= */
+
+        .total-price {
+
+            font-size:
+                22px;
+
+            font-weight:
+                bold;
+
+            position:
+                relative;
+
+            animation:
+                totalFloat
+                3s ease-in-out infinite;
+
+        }
+
+
+        @keyframes totalFloat {
+
+            0%,100% {
+
+                transform:
+                    translateY(0);
+
+            }
+
+            50% {
+
+                transform:
+                    translateY(-4px);
+
+            }
+
+        }
+
+
+        .total-price span {
+
+            color:
+                #0b7d5c;
+
+            display:
+                inline-block;
+
+            animation:
+                priceGlow
+                2s ease-in-out infinite;
+
+        }
+
+
+        @keyframes priceGlow {
+
+            0%,100% {
+
+                text-shadow:
+                    0 0 0
+                    rgba(32,201,151,0);
+
+            }
+
+            50% {
+
+                text-shadow:
+                    0 0 16px
+                    rgba(32,201,151,.5);
+
+                transform:
+                    scale(1.07);
+
+            }
+
+        }
+
+
+        /* =========================================================
+           CHECKOUT
+           ========================================================= */
+
+        .btn-checkout {
+
+            padding:
+                14px 29px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #06281f,
+                    #0b3d2e,
+                    #159a70,
+                    #20c997,
+                    #0b3d2e
+                );
+
+            background-size:
+                300% 300%;
+
+            color:
+                #fff;
+
+            text-decoration:
+                none;
+
+            font-weight:
+                bold;
+
+            border-radius:
+                9px;
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            transition:
+                transform .35s
+                cubic-bezier(.17,.89,.32,1.28),
+
+                box-shadow .35s ease;
+
+            box-shadow:
+                0 8px 20px
+                rgba(11,61,46,.3);
+
+            animation:
+                checkoutGradient
+                4s ease infinite,
+
+                checkoutFloat
+                2.5s ease-in-out infinite;
+
+        }
+
+
+        @keyframes checkoutGradient {
+
+            0% {
+
+                background-position:
+                    0% 50%;
+
+            }
+
+            50% {
+
+                background-position:
+                    100% 50%;
+
+            }
+
+            100% {
+
+                background-position:
+                    0% 50%;
+
+            }
+
+        }
+
+
+        @keyframes checkoutFloat {
+
+            0%,100% {
+
+                transform:
+                    translateY(0);
+
+            }
+
+            50% {
+
+                transform:
+                    translateY(-4px);
+
+            }
+
+        }
+
+
+        .btn-checkout::before {
+
+            content: "";
+
+            position:
+                absolute;
+
+            top:
+                -20%;
+
+            left:
+                -100%;
+
+            width:
+                60%;
+
+            height:
+                140%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,.55),
+                    transparent
+                );
+
+            transform:
+                skewX(-25deg);
+
+            transition:
+                left .6s ease;
+
+        }
+
+
+        .btn-checkout:hover {
+
+            transform:
+                translateY(-7px)
+                scale(1.07);
+
+            box-shadow:
+                0 16px 35px
+                rgba(11,61,46,.4),
+
+                0 0 30px
+                rgba(32,201,151,.25);
+
+        }
+
+
+        .btn-checkout:hover::before {
+
+            left:
+                140%;
+
+        }
+
+
+        .btn-checkout:active {
+
+            transform:
+                scale(.94);
+
+        }
+
+
+        /* =========================================================
+           EMPTY CART
+           ========================================================= */
+
+        .empty-msg {
+
+            text-align:
+                center;
+
+            padding:
+                65px 40px;
+
+            color:
+                var(--text-muted);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,255,255,.95),
+                    rgba(232,255,246,.85)
+                );
+
+            border-radius:
+                18px;
+
+            border:
+                1px solid
+                rgba(32,201,151,.15);
+
+            box-shadow:
+                0 12px 35px
+                rgba(0,0,0,.06);
+
+            animation:
+                emptyCartEnter
+                1s
+                cubic-bezier(.17,.89,.32,1.28);
+
+        }
+
+
+        @keyframes emptyCartEnter {
+
+            0% {
+
+                opacity:
+                    0;
+
+                transform:
+                    scale(.70)
+                    rotate(-4deg);
+
+            }
+
+            60% {
+
+                opacity:
+                    1;
+
+                transform:
+                    scale(1.05)
+                    rotate(1deg);
+
+            }
+
+            100% {
+
+                transform:
+                    scale(1)
+                    rotate(0);
+
+            }
+
+        }
+
+
+        .empty-msg a {
+
+            display:
+                inline-block;
+
+            transition:
+                transform .3s ease,
+                text-shadow .3s ease;
+
+        }
+
+
+        .empty-msg a:hover {
+
+            transform:
+                translateY(-4px)
+                scale(1.08);
+
+            color:
+                #0b7d5c !important;
+
+            text-shadow:
+                0 0 14px
+                rgba(32,201,151,.4);
+
+        }
+
+
+        /* =========================================================
+           ADMIN BUTTON
+           ========================================================= */
+
+        .btn-admin {
+
+            transition:
+                transform .3s ease,
+                box-shadow .3s ease;
+
+        }
+
+
+        .btn-admin:hover {
+
+            transform:
+                translateY(-4px)
+                scale(1.05);
+
+            box-shadow:
+                0 10px 24px
+                rgba(32,201,151,.22);
+
+        }
+
+
+        /* =========================================================
+           FLOATING BRICK
+           ========================================================= */
+
+        .cart-table::after {
+
+            content:
+                "🧱";
+
+            position:
+                absolute;
+
+            right:
+                20px;
+
+            top:
+                -18px;
+
+            font-size:
+                23px;
+
+            opacity:
+                .18;
+
+            animation:
+                brickFloat
+                2.8s ease-in-out infinite;
+
+            pointer-events:
+                none;
+
+        }
+
+
+        @keyframes brickFloat {
+
+            0%,100% {
+
+                transform:
+                    translateY(0)
+                    rotate(-10deg)
+                    scale(1);
+
+            }
+
+            50% {
+
+                transform:
+                    translateY(14px)
+                    rotate(12deg)
+                    scale(1.15);
+
+            }
+
+        }
+
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        footer {
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+
+            animation:
+                footerEnter
+                1s ease;
+
+        }
+
+
+        @keyframes footerEnter {
+
+            from {
+
+                opacity:
+                    0;
+
+                transform:
+                    translateY(45px);
+
+            }
+
+            to {
+
+                opacity:
+                    1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        footer::before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            top:
+                0;
+
+            left:
+                -100%;
+
+            width:
+                100%;
+
+            height:
+                3px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #0b7d5c,
+                    #20c997,
+                    transparent
+                );
+
+            animation:
+                footerLine
+                2.5s linear infinite;
+
+        }
+
+
+        @keyframes footerLine {
+
+            from {
+
+                left:
+                    -100%;
+
+            }
+
+            to {
+
+                left:
+                    100%;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 768px) {
+
+            .cart-summary {
+
+                flex-direction:
+                    column;
+
+                gap:
+                    20px;
+
+                text-align:
+                    center;
+
+            }
+
+
+            .btn-checkout {
+
+                width:
+                    100%;
+
+                text-align:
+                    center;
+
+            }
+
+
+            .cart-table {
+
+                font-size:
+                    14px;
+
+            }
+
+
+            .cart-table th,
+            .cart-table td {
+
+                padding:
+                    11px 8px;
+
+            }
+
+
+            .section-title {
+
+                font-size:
+                    28px;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           REDUCED MOTION
+           ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+
+                animation-duration:
+                    .01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                transition-duration:
+                    .01ms !important;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
+    <header>
+
+        <div class="logo">
+
+            <a href="index.html">
+                MAKET<span>Çİ</span>
+            </a>
+
+        </div>
+
+
+        <nav>
+
+            <ul>
+
+                <li>
+                    <a href="index.html">
+                        Ana Səhifə
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Shop.html">
+                        Məhsullar
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="card.html"
+                        class="active"
+                    >
+                        Səbət
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+
+        <div class="nav-buttons">
+
+            <a
+                href="admin.html"
+                class="btn-admin"
+            >
+                Admin Panel
+            </a>
+
+
+            <a
+                href="card.html"
+                class="btn-cart"
+            >
+                Səbət
+                (
+                <span id="cart-count">
+                    0
+                </span>
+                )
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN
+         ========================================================= -->
+
+    <main class="container">
+
+
+        <h2 class="section-title">
+
+            Səbətiniz
+
+        </h2>
+
+
+        <div id="cart-content">
+
+            <!-- Səbət burada yaranacaq -->
+
+        </div>
+
+
+        <!-- =====================================================
+             CART SUMMARY
+             ===================================================== -->
+
+        <div
+            class="cart-summary"
+            id="cart-summary"
+            style="display: none;"
+        >
+
+            <div class="total-price">
+
+                Yekun Məbləğ:
+
+                <span id="total-amount">
+                    0.00
+                </span>
+
+                AZN
+
+            </div>
+
+
+            <a
+                href="checkout.html"
+                class="btn-checkout"
+            >
+
+                Sifarişi Rəsmiləşdir
+
+            </a>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer>
+
+        <p>
+
+            &copy; 2026 MAKETÇİ.
+            Bütün hüquqlar qorunur.
+
+        </p>
+
+    </footer>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+         ========================================================= -->
+
+    <script>
+
+
+        /* =====================================================
+           RENDER CART
+           ===================================================== */
+
+        function renderCart() {
+
+            const cartContainer =
+                document.getElementById(
+                    'cart-content'
+                );
+
+
+            const summaryContainer =
+                document.getElementById(
+                    'cart-summary'
+                );
+
+
+            const cart =
+                JSON.parse(
+                    localStorage.getItem(
+                        'maketci_cart'
+                    )
+                ) || [];
+
+
+            /* ================================================
+               EMPTY CART
+               ================================================ */
+
+            if (cart.length === 0) {
+
+                cartContainer.innerHTML = `
+
+                    <p class="empty-msg">
+
+                        🧱
+                        <br><br>
+
+                        Səbətiniz boşdur.
+
+                        <br><br>
+
+                        <a
+                            href="Shop.html"
+                            style="
+                                color:
+                                var(--primary-color);
+                            "
+                        >
+
+                            Mağazaya keçin →
+
+                        </a>
+
+                    </p>
+
+                `;
+
+
+                summaryContainer.style.display =
+                    'none';
+
+
+                updateCartCount();
+
+                return;
+
+            }
+
+
+
+            /* ================================================
+               TABLE
+               ================================================ */
+
+            let tableHTML = `
+
+                <table class="cart-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Məhsul
+                            </th>
+
+                            <th>
+                                Qiymət
+                            </th>
+
+                            <th>
+                                Əməliyyat
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+            `;
+
+
+            let total = 0;
+
+
+
+            /* ================================================
+               PRODUCTS
+               ================================================ */
+
+            cart.forEach(
+                (item, index) => {
+
+                    const itemPrice =
+                        parseFloat(
+                            item.price
+                        ) || 0;
+
+
+                    total += itemPrice;
+
+
+
+                    tableHTML += `
+
+                        <tr>
+
+                            <td>
+
+                                ${item.title}
+
+                            </td>
+
+
+                            <td>
+
+                                ${itemPrice.toFixed(2)}
+                                AZN
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+
+                                    class="btn-delete"
+
+                                    onclick="
+                                        removeFromCart(
+                                            ${index}
+                                        )
+                                    "
+
+                                >
+
+                                    🗑 Sil
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            );
+
+
+
+            tableHTML += `
+
+                    </tbody>
+
+                </table>
+
+            `;
+
+
+
+            cartContainer.innerHTML =
+                tableHTML;
+
+
+
+            /* ================================================
+               TOTAL
+               ================================================ */
+
+            document.getElementById(
+                'total-amount'
+            ).innerText =
+                total.toFixed(2);
+
+
+
+            summaryContainer.style.display =
+                'flex';
+
+
+
+            updateCartCount();
+
+        }
+
+
+
+        /* =====================================================
+           REMOVE FROM CART
+           ===================================================== */
+
+        function removeFromCart(index) {
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem(
+                        'maketci_cart'
+                    )
+                ) || [];
+
+
+            cart.splice(
+                index,
+                1
+            );
+
+
+            localStorage.setItem(
+
+                'maketci_cart',
+
+                JSON.stringify(cart)
+
+            );
+
+
+            /* Re-render */
+
+            renderCart();
+
+        }
+
+
+
+        /* =====================================================
+           CART COUNT
+           ===================================================== */
+
+        function updateCartCount() {
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem(
+                        'maketci_cart'
+                    )
+                ) || [];
+
+
+            document.getElementById(
+                'cart-count'
+            ).innerText =
+                cart.length;
+
+        }
+
+
+
+        /* =====================================================
+           START
+           ===================================================== */
+
+        window.addEventListener(
+            'load',
+            renderCart
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>
+```
